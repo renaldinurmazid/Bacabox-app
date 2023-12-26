@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "403038308387",
+    "project_id": "app-kasir-bacabox",
+    "storage_bucket": "app-kasir-bacabox.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403038308387:android:426ab3887e333a61508996",
+        "android_client_info": {
+          "package_name": "com.example.bacabox"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp9jDJEJyMjIsF0RcuYAsSWCK0nJJHqGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

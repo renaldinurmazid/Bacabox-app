@@ -1,4 +1,5 @@
 import 'package:bacabox/pages/transaksi_create.dart';
+import 'package:bacabox/pages/transaksi_detail.dart';
 // import 'package:bacabox/pages/transaksi_detail.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
@@ -77,12 +78,14 @@ class _TransaksiPageState extends State<TransaksiPage> {
                 ),
               ),
               PopupMenuButton(
+                  color: Colour.secondary,
                   icon: Icon(Icons.more_vert),
                   itemBuilder: (context) => [
                         PopupMenuItem(
                             child: TextButton(
                                 onPressed: () {
                                   showModalBottomSheet(
+                                    backgroundColor: Colour.secondary,
                                     context: context,
                                     builder: (context) {
                                       return Wrap(
@@ -118,17 +121,101 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                                         .spaceBetween,
                                                 children: [
                                                   ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colour.primary,
+                                                      ),
                                                       onPressed: () {
                                                         printer.connect(
                                                             selectedDevice!);
+
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Center(
+                                                              child: const Text(
+                                                                  'Perangkat berhasil terhubung!'),
+                                                            ),
+                                                            duration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        3000),
+                                                            width:
+                                                                280.0, // Width of the SnackBar.
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 8.0,
+                                                              vertical: 14.0,
+                                                            ),
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                          ),
+                                                        );
                                                       },
-                                                      child: Text("Connect")),
+                                                      child: Text(
+                                                        "Connect",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
                                                   ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colour.primary,
+                                                      ),
                                                       onPressed: () {
                                                         printer.disconnect();
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Center(
+                                                              child: const Text(
+                                                                  'Perangkat berhasil terputus!'),
+                                                            ),
+                                                            duration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        3000),
+                                                            width:
+                                                                280.0, // Width of the SnackBar.
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 8.0,
+                                                              vertical: 14.0,
+                                                            ),
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                          ),
+                                                        );
                                                       },
-                                                      child:
-                                                          Text("Disconnect")),
+                                                      child: Text(
+                                                        "Disconnect",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
                                                 ],
                                               ))
                                         ],
@@ -136,7 +223,10 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                     },
                                   );
                                 },
-                                child: Text("Connect to Printer")))
+                                child: Text(
+                                  "Connect to Printer",
+                                  style: TextStyle(color: Colors.black),
+                                )))
                       ]),
             ],
           ),
@@ -270,19 +360,6 @@ class _TransaksiPageState extends State<TransaksiPage> {
                           currencyFormatter.format(uangKembali);
 
                       return GestureDetector(
-                        onTap: () {
-                          // Tambahkan logika navigasi ke halaman detail transaksi
-                          // Get.to(() => TransaksiDetail(), arguments: {
-                          //   'id': filteredTransaksi[index].id,
-                          //   'namaPembeli': namaPembeli,
-                          //   'namaProduk': namaProduk,
-                          //   'hargaProduk': hargaProduk,
-                          //   'qty': qty,
-                          //   'uangBayar': uangBayar,
-                          //   'totalBelanja': totalBelanja,
-                          //   'uangKembali': uangKembali
-                          // });
-                        },
                         child: Container(
                           margin: EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
@@ -344,16 +421,14 @@ class _TransaksiPageState extends State<TransaksiPage> {
                               SizedBox(width: 10),
                               IconButton(
                                 onPressed: () {
-                                  // Get.to(() => TransaksiDetail(), arguments: {
-                                  //   'id': filteredTransaksi[index].id,
-                                  //   'namaPembeli': namaPembeli,
-                                  //   'namaProduk': namaProduk,
-                                  //   'hargaProduk': hargaProduk,
-                                  //   'qty': qty,
-                                  //   'uangBayar': uangBayar,
-                                  //   'totalBelanja': totalBelanja,
-                                  //   'uangKembali': uangKembali
-                                  // });
+                                  Get.to(() => TransaksiDetail(), arguments: {
+                                    'id': filteredTransaksi[index].id,
+                                    'namaPembeli': namaPembeli,
+                                    'namaProduk': namaProduk,
+                                    'qty': qty,
+                                    'uangBayar': uangBayar,
+                                    'totalBelanja': totalBelanja,
+                                  });
                                 },
                                 icon: Icon(Icons.more_vert),
                                 color: Colour.primary,

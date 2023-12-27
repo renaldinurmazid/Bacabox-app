@@ -1,5 +1,4 @@
 class Transaksi {
-  late String id;
   final String namaPembeli;
   final String namaProduk;
   final double hargaProduk;
@@ -9,7 +8,6 @@ class Transaksi {
   final double uangKembali;
 
   Transaksi({
-    required this.id,
     required this.namaPembeli,
     required this.namaProduk,
     required this.hargaProduk,
@@ -19,12 +17,8 @@ class Transaksi {
     required this.uangKembali, required String tanggaltransaksi,
   });
 
-  // double get totalBelanja => hargaProduk * qty;
-  // double get uangKembali => uangBayar - totalBelanja;
-
   Map<String, dynamic> toMap() {
     return {
-      'id': id, // Masukkan id dalam toMap
       'namaPembeli': namaPembeli,
       'namaProduk': namaProduk,
       'hargaProduk': hargaProduk,

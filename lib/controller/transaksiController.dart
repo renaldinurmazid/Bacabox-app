@@ -31,12 +31,23 @@ class TransaksiController extends GetxController {
     }
   }
 
-  Future<bool> updateTransaksi(Transaksi transaksi) async {
+  Future<bool> updateTransaksi(String id, String namaPembeli, String namaProduk, double hargaProduk, int qty, double uangBayar, double totalBelanja, double uangKembali) async {
     try {
       await _firestore
           .collection('transaksi')
-          .doc(transaksi.id)
-          .update(transaksi.toMap());
+          .doc(id)
+          .update(
+            {
+              'namaPembeli': namaPembeli,
+              'namaProduk': namaProduk,
+              'hargaProduk': hargaProduk,
+              'qty': qty,
+              'uangBayar': uangBayar,
+              'totalBelanja': totalBelanja,
+              'uangKembali': uangKembali,
+              'tanggaltransaksi': DateTime.now().toString(),
+            }
+          );
       print('Transaction updated successfully!');
       shouldUpdate.toggle();
       return true;

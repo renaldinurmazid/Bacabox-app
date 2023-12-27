@@ -89,6 +89,7 @@ class _TransaksiSState extends State<TransaksiS> {
       Uint8List resizedImageBytes =
           await resizeImage(originalImageBytes!, 100, 100);
 
+      printer.printNewLine();
       printer.printImageBytes(resizedImageBytes);
       printer.printCustom("Bacabox", 2, 1);
       printer.printNewLine();

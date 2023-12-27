@@ -263,7 +263,6 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                         totalBelanja: totalBelanja,
                         uangKembali: uangKembali,
                         tanggaltransaksi: DateTime.now().toString(),
-                        id: '${DateTime.now().microsecondsSinceEpoch}',
                       );
                       Get.to(() => TransaksiS(
                             namaPembeli: namaPembeli,

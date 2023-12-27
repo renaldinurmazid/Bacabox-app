@@ -1,5 +1,4 @@
 import 'package:bacabox/controller/bookController.dart';
-import 'package:bacabox/model/book.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

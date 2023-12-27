@@ -1,6 +1,5 @@
 import 'package:bacabox/controller/transaksiController.dart';
 import 'package:bacabox/model/transaksi.dart';
-import 'package:bacabox/pages/successtransaksi.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -18,46 +17,46 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
   String? _selectedProduct;
   List<String> produkList = [];
   double _hargaProduk = 0.0;
-  double _totalBelanja = 0.0;
 
   final TextEditingController _namaPembeliController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _uangBayarController = TextEditingController();
-
+  final TextEditingController _hargaProdukController = TextEditingController();
   final TransaksiController _transaksiController =
       Get.put(TransaksiController());
 
-  final TextEditingController _hargaProdukController = TextEditingController();
+  Future<void> updateTransaction() async {
+    String id = Get.arguments['id'];
+    String namaPembeli = _namaPembeliController.text.trim();
+    int qty = int.tryParse(_qtyController.text.trim()) ?? 0;
+    double uangBayar = double.tryParse(
+            _uangBayarController.text.replaceAll(RegExp('[^0-9]'), '')) ??
+        0;
+    double _totalBelanja = _hargaProduk * qty;
+    double _uangKembali = uangBayar - _totalBelanja;
 
-  void calculateTotalBelanja() {
-    int qty = int.tryParse(_qtyController.text) ?? 0;
-    setState(() {
-      _totalBelanja = _hargaProduk * qty;
-    });
-  }
+    bool success = await _transaksiController.updateTransaksi(
+        id,
+        namaPembeli,
+        _selectedProduct!,
+        _hargaProduk,
+        qty,
+        uangBayar,
+        _totalBelanja,
+        _uangKembali);
 
-  void fetchBookPrice(String? selectedBook) async {
-    if (selectedBook != null) {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('books')
-          .where('title', isEqualTo: selectedBook)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        double hargaProduk = querySnapshot
-            .docs.first['price']; // Ganti dengan field harga pada Firestore
-
-        setState(() {
-          _hargaProduk = hargaProduk;
-          _hargaProdukController.text =
-              "Rp. ${_hargaProduk.toStringAsFixed(2)}";
-        });
-      }
-    } else {
+    if (success) {
+      _namaPembeliController.clear();
+      _qtyController.clear();
+      _uangBayarController.clear();
+      _hargaProdukController.clear();
       setState(() {
-        _hargaProduk = 0.0;
-        _hargaProdukController.text = '';
+        _selectedProduct = null;
       });
+
+      Get.back();
+    } else {
+      print('Gagal memperbarui transaksi');
     }
   }
 
@@ -65,6 +64,11 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
   void initState() {
     super.initState();
     fetchProducts();
+    final Map<String, dynamic>? args = Get.arguments;
+    _selectedProduct = args?['namaProduk'] ?? null;
+    if (_selectedProduct != null) {
+      fetchBookPrice(_selectedProduct);
+    }
   }
 
   Future<void> fetchProducts() async {
@@ -77,238 +81,231 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
     });
   }
 
+  Future<void> fetchBookPrice(String? selectedBook) async {
+    if (selectedBook != null) {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('books')
+          .where('title', isEqualTo: selectedBook)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        double hargaProduk = querySnapshot.docs.first['price'];
+
+        setState(() {
+          _hargaProduk = hargaProduk;
+          _hargaProdukController.text = currencyFormatter.format(hargaProduk);
+        });
+      }
+    } else {
+      setState(() {
+        _hargaProduk = 0.0;
+        _hargaProdukController.text = '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic>? args = Get.arguments;
+    final String id = args?['id'] ?? '';
+    final String namaPembeli = args?['namaPembeli'] ?? '';
+    final double uangBayar = args?['uangBayar'] ?? 0.0;
+    final int qty = args?['qty'] ?? 0;
+
+    _namaPembeliController.text = namaPembeli;
+    _qtyController.text = qty.toString();
+    _uangBayarController.text = uangBayar.toStringAsFixed(0);
+
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colour.secondary,
-          title: Text('Create Transaksi',
-              style: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colour.secondary,
+        title: Text(
+          'Update Transaksi',
+          style: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        body: Container(
-            color: Colour.secondary,
-            padding: const EdgeInsets.all(20),
-            child: Column(children: [
-              TextField(
-                  controller: _namaPembeliController,
-                  decoration: InputDecoration(
-                    hintText: 'Exm. Renaldi Nurmazid',
-                    label: Text(
-                      'Nama Pembeli',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          fontFamily: 'Poppins'),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none),
-                  )),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+      ),
+      body: Container(
+        color: Colour.secondary,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: _namaPembeliController,
+              decoration: InputDecoration(
+                hintText: 'Exm. Renaldi Nurmazid',
+                label: Text(
+                  'Nama Pembeli',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                  ),
                 ),
-                width: double.infinity,
-                padding: EdgeInsets.all(10),
-                height: 50,
-                child: DropdownButton<String>(
-                  hint: Text('Pilih Produk'),
-                  value: _selectedProduct,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedProduct = newValue;
-                      fetchBookPrice(
-                          newValue); // Panggil fungsi untuk menampilkan harga buku
-                    });
-                  },
-                  items:
-                      produkList.map<DropdownMenuItem<String>>((String value) {
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: double.infinity,
+              padding: EdgeInsets.all(10),
+              height: 50,
+              child: DropdownButton<String>(
+                hint: Text('Pilih Produk'),
+                value: _selectedProduct,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedProduct = newValue;
+                    fetchBookPrice(newValue);
+                  });
+                },
+                items: produkList.map<DropdownMenuItem<String>>(
+                  (String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
-                  }).toList(),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                  controller: _hargaProdukController,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintText: 'Exm. Rp. 100.000',
-                    label: Text(
-                      'Harga Produk',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          fontFamily: 'Poppins'),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none),
-                  )),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                  controller: _qtyController,
-                  onChanged: (value) {
-                    calculateTotalBelanja(); // Panggil fungsi untuk menghitung total belanja saat nilai qty berubah
                   },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Exm. 50',
-                    label: Text(
-                      'QTY',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          fontFamily: 'Poppins'),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none),
-                  )),
-              SizedBox(
-                height: 20,
+                ).toList(),
               ),
-              TextField(
-                  controller: _uangBayarController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Exm. Rp. 100.000',
-                    label: Text(
-                      'Uang Bayar',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          fontFamily: 'Poppins'),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none),
-                  )),
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total Belanja",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      "${currencyFormatter.format(_totalBelanja)}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                margin: EdgeInsets.only(top: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    backgroundColor: Colour.primary,
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _hargaProdukController,
+              enabled: false,
+              decoration: InputDecoration(
+                hintText: 'Exm. Rp. 100.000',
+                label: Text(
+                  'Harga Produk',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
                   ),
-                  onPressed: () async {
-                    String namaPembeli = _namaPembeliController.text.trim();
-                    int qty = int.tryParse(_qtyController.text.trim()) ?? 0;
-                    double uangBayar = double.tryParse(_uangBayarController.text
-                            .replaceAll(RegExp('[^0-9]'), '')) ??
-                        0;
-
-                    if (_selectedProduct != null && qty > 0 && uangBayar > 0) {
-                      double totalBelanja = _hargaProduk * qty;
-                      double uangKembali = uangBayar - totalBelanja;
-
-                      Transaksi newTransaksi = Transaksi(
-                        namaPembeli: namaPembeli,
-                        namaProduk: _selectedProduct!,
-                        hargaProduk: _hargaProduk,
-                        qty: qty,
-                        uangBayar: uangBayar,
-                        totalBelanja: totalBelanja,
-                        uangKembali: uangKembali,
-                        tanggaltransaksi: DateTime.now().toString(),
-                        id: '${DateTime.now().microsecondsSinceEpoch}',
-                      );
-                      Get.to(() => TransaksiS(
-                            namaPembeli: namaPembeli,
-                            namaBarang: _selectedProduct!,
-                            hargaSatuan: _hargaProduk,
-                            qty: qty,
-                            totalBelanja: totalBelanja,
-                            uangBayar: uangBayar,
-                            uangKembali: uangKembali,
-                          ));
-                      bool success =
-                          await _transaksiController.addTransaksi(newTransaksi);
-
-                      if (success) {
-                        _namaPembeliController.clear();
-                        _qtyController.clear();
-                        _uangBayarController.clear();
-                        _hargaProdukController.clear();
-                        _totalBelanja = 0;
-                        setState(() {
-                          _selectedProduct = null;
-                        });
-                      } else {
-                        print('Failed to add transaction to the database');
-                      }
-                    } else {
-                      print('Please fill in all fields correctly');
-                    }
-                  },
-                  child: Text('Submit',
-                      style: TextStyle(
-                          color: Colors.white, fontFamily: 'Poppins')),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
                 ),
               ),
-            ])));
-  }
-
-  void updateTotalBelanja() {
-    double hargaProduk = _hargaProduk;
-    int qty = int.tryParse(_qtyController.text) ?? 0;
-    double totalBelanja = hargaProduk * qty;
-
-    setState(() {
-      _totalBelanja = totalBelanja;
-    });
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _qtyController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Exm. 50',
+                label: Text(
+                  'QTY',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _uangBayarController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Exm. Rp. 100.000',
+                label: Text(
+                  'Uang Bayar',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      backgroundColor: Colour.primary,
+                    ),
+                    onPressed: () async {
+                      updateTransaction();
+                    },
+                    child: Text(
+                      'Submit',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: () async {
+                      bool success =
+                          await _transaksiController.deleteTransaksi(id);
+                      if (success) {
+                        _transaksiController.shouldUpdate.value = true;
+                        Get.back(); // Kembali ke halaman produk
+                      } else {
+                        print('Failed to add book, staying on /produkcreate');
+                      }
+                    },
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

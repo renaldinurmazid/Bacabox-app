@@ -85,7 +85,8 @@ class ProdukCreate extends StatelessWidget {
 
                     if (success) {
                       _bookController.shouldUpdate.value = true;
-                      Get.back(); // Kembali ke halaman produk
+                      Get.back();
+                      Get.snackbar('Success', 'Book added successfully!');
                     } else {
                       print('Failed to add book, staying on /produkcreate');
                     }

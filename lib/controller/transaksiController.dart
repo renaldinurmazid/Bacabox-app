@@ -10,7 +10,6 @@ class TransaksiController extends GetxController {
   Future<bool> addTransaksi(Transaksi transaksi) async {
     try {
       await _firestore.collection('transaksi').add(transaksi.toMap());
-      print('Transaction added successfully!');
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -22,7 +21,6 @@ class TransaksiController extends GetxController {
   Future<bool> deleteTransaksi(String id) async {
     try {
       await _firestore.collection('transaksi').doc(id).delete();
-      print('Transaction deleted successfully!');
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -48,7 +46,6 @@ class TransaksiController extends GetxController {
               'tanggaltransaksi': DateTime.now().toString(),
             }
           );
-      print('Transaction updated successfully!');
       shouldUpdate.toggle();
       return true;
     } catch (e) {

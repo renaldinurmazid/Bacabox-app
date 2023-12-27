@@ -9,7 +9,6 @@ class BookController extends GetxController {
   Future<bool> addBook(Book book) async {
     try {
       await _firestore.collection('books').add(book.toMap());
-      print('Book added successfully!');
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -21,7 +20,6 @@ class BookController extends GetxController {
   Future<bool> deleteBook(String id) async {
     try {
       await _firestore.collection('books').doc(id).delete();
-      print('Book deleted successfully!');
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -36,7 +34,6 @@ class BookController extends GetxController {
         'title': newTitle,
         'price': newPrice,
       });
-      print('Book updated successfully!');
       return true;
     } catch (e) {
       print('Error updating book: $e');

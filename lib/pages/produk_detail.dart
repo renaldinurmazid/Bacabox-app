@@ -86,11 +86,12 @@ class ProdukDetail extends StatelessWidget {
 
                           if (success) {
                             _bookController.shouldUpdate.value = true;
-                            Get.back(); // Kembali ke halaman produk
+                            Get.back();
                           } else {
                             print(
                                 'Failed to add book, staying on /produkcreate');
                           }
+                          Get.snackbar('Success', 'Book updated successfully!');
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colour.primary),
@@ -102,8 +103,9 @@ class ProdukDetail extends StatelessWidget {
                         onPressed: () async {
                           bool success = await _bookController.deleteBook(id);
                           if (success) {
-                            _bookController.shouldUpdate.value = true;
-                            Get.back(); // Kembali ke halaman produk
+                            Get.back();
+                            Get.snackbar(
+                                'Success', 'Book deleted successfully!');
                           } else {
                             print(
                                 'Failed to add book, staying on /produkcreate');

@@ -3,10 +3,25 @@ import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final AuthController _authController = Get.find<AuthController>();
+
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
+  bool _isObscure = true;
+
+  void togglePasswordVisibility() {
+    setState(() {
+      _isObscure = !_isObscure;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +85,17 @@ class LoginPage extends StatelessWidget {
             ),
             TextFormField(
               controller: passwordController,
-              obscureText: true,
+              obscureText: _isObscure,
               decoration: InputDecoration(
-                suffixIcon: Icon(Icons.password),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    togglePasswordVisibility(); // Panggil fungsi untuk mengubah status obscure password
+                  },
+                  icon: Icon(_isObscure
+                      ? Icons.visibility
+                      : Icons
+                          .visibility_off), // Ganti ikon berdasarkan status obscure
+                ),
                 hintText: 'Your password',
                 filled: true,
                 fillColor: Colors.white,

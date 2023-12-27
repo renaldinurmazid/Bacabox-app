@@ -273,6 +273,8 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                             uangBayar: uangBayar,
                             uangKembali: uangKembali,
                           ));
+                      Get.snackbar('Success', 'Transaksi added successfully');
+
                       bool success =
                           await _transaksiController.addTransaksi(newTransaksi);
 

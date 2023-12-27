@@ -55,6 +55,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
       });
 
       Get.back();
+      Get.snackbar('Success', 'Transaction updated successfully!');
     } else {
       print('Gagal memperbarui transaksi');
     }
@@ -287,7 +288,9 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
                           await _transaksiController.deleteTransaksi(id);
                       if (success) {
                         _transaksiController.shouldUpdate.value = true;
-                        Get.back(); // Kembali ke halaman produk
+                        Get.back();
+                        Get.snackbar(
+                            'Success', 'Transaction deleted successfully!');
                       } else {
                         print('Failed to add book, staying on /produkcreate');
                       }

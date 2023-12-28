@@ -1,7 +1,6 @@
 import 'package:bacabox/controller/authController.dart';
 import 'package:bacabox/model/log.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class LogController {
@@ -11,7 +10,6 @@ class LogController {
 
   Future<void> addLog(String message) async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
       String userName = _authController.userName.value;
 
       await logsCollection.add({

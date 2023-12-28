@@ -1,3 +1,4 @@
+import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/controller/transaksiController.dart';
 import 'package:bacabox/model/transaksi.dart';
 import 'package:bacabox/pages/successtransaksi.dart';
@@ -23,6 +24,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
   final TextEditingController _namaPembeliController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _uangBayarController = TextEditingController();
+  final LogController logController = LogController();
 
   final TransaksiController _transaksiController =
       Get.put(TransaksiController());
@@ -264,6 +266,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                         uangKembali: uangKembali,
                         tanggaltransaksi: DateTime.now().toString(),
                       );
+                      _addLog("Add Transaksi");
                       Get.to(() => TransaksiS(
                             namaPembeli: namaPembeli,
                             namaBarang: _selectedProduct!,
@@ -310,5 +313,15 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
     setState(() {
       _totalBelanja = totalBelanja;
     });
+  }
+
+  Future<void> _addLog(String message) async {
+    try {
+      await logController
+          .addLog(message); // Menambahkan log saat tombol ditekan
+      print('Log added successfully!');
+    } catch (e) {
+      print('Failed to add log: $e');
+    }
   }
 }

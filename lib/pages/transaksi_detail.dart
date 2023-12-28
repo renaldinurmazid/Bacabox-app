@@ -1,5 +1,5 @@
+import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/controller/transaksiController.dart';
-import 'package:bacabox/model/transaksi.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _uangBayarController = TextEditingController();
   final TextEditingController _hargaProdukController = TextEditingController();
+  final LogController _logController = LogController();
   final TransaksiController _transaksiController =
       Get.put(TransaksiController());
 
@@ -53,7 +54,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
       setState(() {
         _selectedProduct = null;
       });
-
+      _addLog("Transaksi updated");
       Get.back();
       Get.snackbar('Success', 'Transaction updated successfully!');
     } else {
@@ -288,6 +289,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
                           await _transaksiController.deleteTransaksi(id);
                       if (success) {
                         _transaksiController.shouldUpdate.value = true;
+                        _addLog("Deleted transaction");
                         Get.back();
                         Get.snackbar(
                             'Success', 'Transaction deleted successfully!');
@@ -310,5 +312,15 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
         ),
       ),
     );
+  }
+
+  Future<void> _addLog(String message) async {
+    try {
+      await _logController
+          .addLog(message); // Menambahkan log saat tombol ditekan
+      print('Log added successfully!');
+    } catch (e) {
+      print('Failed to add log: $e');
+    }
   }
 }

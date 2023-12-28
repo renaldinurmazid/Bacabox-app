@@ -1,4 +1,5 @@
 import 'package:bacabox/controller/bookController.dart';
+import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ class ProdukDetail extends StatelessWidget {
   final BookController _bookController = Get.put(BookController());
   final TextEditingController titleController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final LogController logController = LogController();
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +88,7 @@ class ProdukDetail extends StatelessWidget {
 
                           if (success) {
                             _bookController.shouldUpdate.value = true;
+                            _addLog("Updated book with title: $title");
                             Get.back();
                           } else {
                             print(
@@ -103,6 +106,7 @@ class ProdukDetail extends StatelessWidget {
                         onPressed: () async {
                           bool success = await _bookController.deleteBook(id);
                           if (success) {
+                            _addLog("Deleted book with title: $title");
                             Get.back();
                             Get.snackbar(
                                 'Success', 'Book deleted successfully!');
@@ -121,5 +125,15 @@ class ProdukDetail extends StatelessWidget {
             )
           ])),
     );
+  }
+
+  Future<void> _addLog(String message) async {
+    try {
+      await logController
+          .addLog(message); // Menambahkan log saat tombol ditekan
+      print('Log added successfully!');
+    } catch (e) {
+      print('Failed to add log: $e');
+    }
   }
 }

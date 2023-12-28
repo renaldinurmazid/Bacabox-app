@@ -129,39 +129,8 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                                       onPressed: () {
                                                         printer.connect(
                                                             selectedDevice!);
-
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Center(
-                                                              child: const Text(
-                                                                  'Perangkat berhasil terhubung!'),
-                                                            ),
-                                                            duration:
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        3000),
-                                                            width:
-                                                                280.0, // Width of the SnackBar.
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 8.0,
-                                                              vertical: 14.0,
-                                                            ),
-                                                            behavior:
-                                                                SnackBarBehavior
-                                                                    .floating,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0),
-                                                            ),
-                                                          ),
-                                                        );
+                                                        Get.snackbar('Success',
+                                                            'Printer connected successfully!');
                                                       },
                                                       child: Text(
                                                         "Connect",
@@ -177,38 +146,8 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                                       ),
                                                       onPressed: () {
                                                         printer.disconnect();
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Center(
-                                                              child: const Text(
-                                                                  'Perangkat berhasil terputus!'),
-                                                            ),
-                                                            duration:
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        3000),
-                                                            width:
-                                                                280.0, // Width of the SnackBar.
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 8.0,
-                                                              vertical: 14.0,
-                                                            ),
-                                                            behavior:
-                                                                SnackBarBehavior
-                                                                    .floating,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0),
-                                                            ),
-                                                          ),
-                                                        );
+                                                        Get.snackbar('Success',
+                                                            'Printer disconnected successfully!');
                                                       },
                                                       child: Text(
                                                         "Disconnect",

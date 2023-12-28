@@ -204,6 +204,8 @@ class _UserDetailState extends State<UserDetail> {
                           bool success = await _AuthController.deleteUser(id);
                           if (success) {
                             Get.back();
+                            Get.snackbar(
+                                'Success', 'User deleted successfully!');
                           } else {
                             print('Failed to delete users');
                           }

@@ -1,6 +1,8 @@
 import 'dart:typed_data';
+import 'package:bacabox/controller/authController.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -31,6 +33,8 @@ class TransaksiS extends StatefulWidget {
 }
 
 class _TransaksiSState extends State<TransaksiS> {
+  final AuthController _authController = Get.find<AuthController>();
+
   List<BluetoothDevice> devices = [];
   BluetoothDevice? selectedDevice;
   BlueThermalPrinter printer = BlueThermalPrinter.instance;
@@ -89,11 +93,10 @@ class _TransaksiSState extends State<TransaksiS> {
       Uint8List resizedImageBytes =
           await resizeImage(originalImageBytes!, 100, 100);
 
-      printer.printNewLine();
       printer.printImageBytes(resizedImageBytes);
       printer.printCustom("Bacabox", 2, 1);
       printer.printNewLine();
-      printer.printLeftRight("Nama Pembeli", "${widget.namaPembeli}", 1);
+      printer.printLeftRight("Nama Kasir", "${_authController.userName}", 1);
       printer.printLeftRight("Barang", "${widget.namaBarang}", 1);
       printer.printLeftRight(
           "Harga Satuan", "${currencyFormatter.format(widget.hargaSatuan)}", 1);

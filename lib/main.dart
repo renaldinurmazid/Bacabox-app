@@ -1,5 +1,6 @@
 import 'package:bacabox/controller/authController.dart';
 import 'package:bacabox/pages/admin/dashboard.dart';
+import 'package:bacabox/pages/log.dart';
 import 'package:bacabox/pages/produk.dart';
 import 'package:bacabox/pages/produk_create.dart';
 import 'package:bacabox/pages/transaksi.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/transaksi', page: () => TransaksiPage()),
         GetPage(name: '/users', page: () => UserPage()),
         GetPage(name: '/produkcreate', page: () => ProdukCreate()),
+        GetPage(name: '/log', page: () => Log()),
       ],
     );
   }
@@ -48,11 +50,43 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   final AuthController _authController = Get.find<AuthController>();
-  final List<Widget> _widgetOptions = <Widget>[
-    DashboardAdmin(),
+
+  final List<List<IconData>> _roleIcons = [
+    [Icons.dashboard, Icons.person, Icons.book],
+    [Icons.dashboard, Icons.swap_horizontal_circle, Icons.book],
+    [Icons.dashboard, Icons.history],
+    [
+      Icons.dashboard,
+      Icons.swap_horizontal_circle,
+      Icons.book,
+      Icons.person,
+      Icons.history
+    ],
+  ];
+
+  final List<Widget> _adminOptions = <Widget>[
+    Dashboard(),
+    UserPage(),
+    ProdukPage(),
+  ];
+
+  final List<Widget> _kasirOptions = <Widget>[
+    Dashboard(),
+    TransaksiPage(),
+    ProdukPage(),
+  ];
+
+  final List<Widget> _ownerOptions = <Widget>[
+    Dashboard(),
+    Log(),
+  ];
+
+  final List<Widget> _defaultOptions = <Widget>[
+    Dashboard(),
     TransaksiPage(),
     ProdukPage(),
     UserPage(),
+    Log(),
   ];
 
   final RxInt _selectedIndex = 0.obs;
@@ -63,19 +97,33 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<List<Widget>> rolesOptions = [
+      _adminOptions,
+      _kasirOptions,
+      _ownerOptions,
+      _defaultOptions,
+    ];
+
     return Scaffold(
-      body: Obx(() => _widgetOptions[_selectedIndex.value]),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colour.secondary,
-        items: <Widget>[
-          Icon(Icons.dashboard, size: 30),
-          Icon(Icons.swap_horizontal_circle, size: 30),
-          Icon(Icons.book, size: 30),
-          Icon(Icons.person, size: 30),
-        ],
-        onTap: _onItemTapped,
-        index: _selectedIndex.value,
-      ),
+      body: Obx(() {
+        final int roleIndex = _authController.getCurrentUserRole().index;
+        final List<Widget> selectedOptions = rolesOptions[roleIndex];
+        return selectedOptions[_selectedIndex.value];
+      }),
+      bottomNavigationBar: Obx(() {
+        final int roleIndex = _authController.getCurrentUserRole().index;
+        final List<Widget> selectedOptions = rolesOptions[roleIndex];
+        final List<IconData> selectedIcons = _roleIcons[roleIndex];
+        return CurvedNavigationBar(
+          backgroundColor: Colour.secondary,
+          items: List.generate(selectedOptions.length, (index) {
+            return Icon(selectedIcons[index],
+                size: 30); 
+          }),
+          onTap: _onItemTapped,
+          index: _selectedIndex.value,
+        );
+      }),
     );
   }
 }

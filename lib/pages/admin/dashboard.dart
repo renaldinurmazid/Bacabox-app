@@ -1,10 +1,21 @@
 import 'package:bacabox/controller/authController.dart';
+import 'package:bacabox/controller/bookController.dart';
+import 'package:bacabox/controller/transaksiController.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DashboardAdmin extends StatelessWidget {
+class Dashboard extends StatefulWidget {
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
   final AuthController _authController = Get.find<AuthController>();
+  final BookController _bookController = Get.put(BookController());
+  final AuthController _userController = Get.put(AuthController());
+  final TransaksiController _transaksiController =
+      Get.put(TransaksiController());
 
   @override
   Widget build(BuildContext context) {
@@ -38,27 +49,57 @@ class DashboardAdmin extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            DashboardItem(
-              title: 'Data Transaksi',
-              iconPath: 'images/transaction.png',
-              onPressed: () {
-                // Tambahkan aksi saat tombol ditekan
+            FutureBuilder<int>(
+              future: _transaksiController.countTransaksi(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  int transaksiCount = snapshot.data ?? 0;
+                  return DashboardItem(
+                    title: 'Data Transaksi',
+                    iconPath: 'images/transaction.png',
+                    dataCount: transaksiCount,
+                  );
+                }
               },
             ),
             SizedBox(height: 20),
-            DashboardItem(
-              title: 'Data Produk',
-              iconPath: 'images/package.png',
-              onPressed: () {
-                // Tambahkan aksi saat tombol ditekan
+            FutureBuilder<int>(
+              future: _bookController.countBooks(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  int bookCount = snapshot.data ?? 0;
+                  return DashboardItem(
+                    title: 'Data Produk',
+                    iconPath: 'images/package.png',
+                    dataCount: bookCount,
+                  );
+                }
               },
             ),
             SizedBox(height: 20),
-            DashboardItem(
-              title: 'Data Users',
-              iconPath: 'images/user.png',
-              onPressed: () {
-                // Tambahkan aksi saat tombol ditekan
+            FutureBuilder<int>(
+              future: _userController.countUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  int usersCount = snapshot.data ?? 0;
+                  return DashboardItem(
+                    title: 'Data Users',
+                    iconPath: 'images/user.png',
+                    dataCount: usersCount,
+                  );
+                }
               },
             ),
           ],
@@ -71,12 +112,12 @@ class DashboardAdmin extends StatelessWidget {
 class DashboardItem extends StatelessWidget {
   final String title;
   final String iconPath;
-  final VoidCallback? onPressed;
+  final int dataCount;
 
   const DashboardItem({
     required this.title,
     required this.iconPath,
-    this.onPressed,
+    required this.dataCount,
   });
 
   @override
@@ -112,7 +153,7 @@ class DashboardItem extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  "10",
+                  dataCount.toString(),
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 14,
@@ -124,20 +165,6 @@ class DashboardItem extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: onPressed,
-            child: Text(
-              "Show",
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colour.primary),
-              minimumSize: MaterialStateProperty.all(Size(60, 40)),
-            ),
-          ),
         ],
       ),
     );

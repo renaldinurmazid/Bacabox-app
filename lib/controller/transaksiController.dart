@@ -57,4 +57,14 @@ class TransaksiController extends GetxController {
   void clearTransaksiList() {
     transaksiList.clear();
   }
+
+  Future<int> countTransaksi() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('transaksi').get();
+      return querySnapshot.size;
+    } catch (e) {
+      print('Error counting books: $e');
+      return 0;
+    }
+  }
 }

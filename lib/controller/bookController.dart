@@ -6,6 +6,8 @@ class BookController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxBool shouldUpdate = false.obs;
 
+  get book => null;
+
   Future<bool> addBook(Book book) async {
     try {
       await _firestore.collection('books').add(book.toMap());
@@ -38,6 +40,16 @@ class BookController extends GetxController {
     } catch (e) {
       print('Error updating book: $e');
       return false;
+    }
+  }
+
+  Future<int> countBooks() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('books').get();
+      return querySnapshot.size;
+    } catch (e) {
+      print('Error counting books: $e');
+      return 0;
     }
   }
 }

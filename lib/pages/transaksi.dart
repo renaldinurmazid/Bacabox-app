@@ -40,6 +40,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
   void queryProduk(String query) {
     setState(() {
       searchQuery = query.toLowerCase();
+      filterTransaksi();
     });
   }
 
@@ -55,8 +56,44 @@ class _TransaksiPageState extends State<TransaksiPage> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
+        filterTransaksi();
       });
     }
+  }
+
+  List<DocumentSnapshot> transaksiList = [];
+  List<DocumentSnapshot> filteredTransaksi = [];
+
+  void getTransaksi() {
+    transaksiCollection.snapshots().listen((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        setState(() {
+          transaksiList = snapshot.docs;
+          filterTransaksi();
+        });
+      } else {
+        setState(() {
+          transaksiList = [];
+          filteredTransaksi = [];
+        });
+      }
+    }, onError: (error) {
+      print('Error getting transaksi: $error');
+    });
+  }
+
+  void filterTransaksi() {
+    filteredTransaksi = transaksiList.where((transaksi) {
+      final namaProduk = transaksi['namaProduk'].toString().toLowerCase();
+      final tanggalTransaksiString = transaksi['tanggaltransaksi'] as String;
+      final tanggalTransaksi = DateTime.parse(tanggalTransaksiString);
+
+      return namaProduk.contains(searchQuery) &&
+          (selectedDate == null ||
+              (tanggalTransaksi.day == selectedDate.day &&
+                  tanggalTransaksi.month == selectedDate.month &&
+                  tanggalTransaksi.year == selectedDate.year));
+    }).toList();
   }
 
   @override
@@ -241,25 +278,10 @@ class _TransaksiPageState extends State<TransaksiPage> {
 
                   final List<DocumentSnapshot> transaksi = snapshot.data!.docs;
 
-                  final filteredTransaksi = searchQuery.isEmpty
-                      ? transaksi
-                      : transaksi.where((transaksi) {
-                          final namaProduk =
-                              transaksi['namaProduk'].toString().toLowerCase();
-                          return namaProduk.contains(searchQuery);
-                        }).toList();
-                  // final filteredTransaksibyDate = transaksi.where((transaksi) {
-                  //   final tanggalTransaksi = transaksi['tanggaltransaksi'];
+                  transaksiList = snapshot.data!.docs;
 
-                  //   if (tanggalTransaksi is Timestamp) {
-                  //     final date = tanggalTransaksi.toDate().toLocal();
-                  //     return date.day == selectedDate.day &&
-                  //         date.month == selectedDate.month &&
-                  //         date.year == selectedDate.year;
-                  //   }
+                  filterTransaksi();
 
-                  //   return false;
-                  // }).toList();
                   if (filteredTransaksi.isEmpty) {
                     return Center(
                       child: Text(

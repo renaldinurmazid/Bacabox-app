@@ -5,7 +5,12 @@ import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProdukCreate extends StatelessWidget {
+class ProdukCreate extends StatefulWidget {
+  @override
+  State<ProdukCreate> createState() => _ProdukCreateState();
+}
+
+class _ProdukCreateState extends State<ProdukCreate> {
   final BookController _bookController = Get.put(BookController());
   final TextEditingController titleController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -94,7 +99,7 @@ class ProdukCreate extends StatelessWidget {
                       print('Failed to add book, staying on /produkcreate');
                     }
                   } else {
-                    print('Please fill in all fields correctly');
+                    Get.snackbar('Error', 'Silakan lengkapi form.');
                   }
                 },
                 child: Text('Submit',
@@ -110,8 +115,7 @@ class ProdukCreate extends StatelessWidget {
 
   Future<void> _addLog(String message) async {
     try {
-      await logController
-          .addLog(message); // Menambahkan log saat tombol ditekan
+      await logController.addLog(message);
       print('Log added successfully!');
     } catch (e) {
       print('Failed to add log: $e');

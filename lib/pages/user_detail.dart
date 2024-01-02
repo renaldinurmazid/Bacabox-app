@@ -1,4 +1,5 @@
 import 'package:bacabox/controller/authController.dart';
+import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class _UserDetailState extends State<UserDetail> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final LogController logController = LogController();
 
   String? _selectedRole;
 
@@ -183,11 +185,11 @@ class _UserDetailState extends State<UserDetail> {
                             String userId = id;
                             _AuthController.updateUser(
                                 userId, email, _selectedRole!, name, password);
+                            Get.back();
+                            _addLog('Updated user');
                           } else {
-                            print('Please fill in all fields correctly');
+                            Get.snackbar('Error', 'Please fill all fields');
                           }
-
-                          Get.back();
                         },
                         child: Text(
                           "Submit",
@@ -206,8 +208,9 @@ class _UserDetailState extends State<UserDetail> {
                             Get.back();
                             Get.snackbar(
                                 'Success', 'User deleted successfully!');
+                            _addLog('Deleted user');
                           } else {
-                            print('Failed to delete users');
+                            Get.snackbar('Failed', 'Failed to delete user');
                           }
                         },
                         child: Text(
@@ -223,5 +226,14 @@ class _UserDetailState extends State<UserDetail> {
             ],
           ),
         ));
+  }
+
+  Future<void> _addLog(String message) async {
+    try {
+      await logController.addLog(message);
+      print('Log added successfully!');
+    } catch (e) {
+      print('Failed to add log: $e');
+    }
   }
 }

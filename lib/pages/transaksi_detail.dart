@@ -36,17 +36,21 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
     double _totalBelanja = _hargaProduk * qty;
     double _uangKembali = uangBayar - _totalBelanja;
 
-    bool success = await _transaksiController.updateTransaksi(
-        id,
-        namaPembeli,
-        _selectedProduct!,
-        _hargaProduk,
-        qty,
-        uangBayar,
-        _totalBelanja,
-        _uangKembali);
+    if (_selectedProduct != null &&
+        qty > 0 &&
+        uangBayar > 0 &&
+        namaPembeli.isNotEmpty &&
+        uangBayar >= _totalBelanja) {
+      await _transaksiController.updateTransaksi(
+          id,
+          namaPembeli,
+          _selectedProduct!,
+          _hargaProduk,
+          qty,
+          uangBayar,
+          _totalBelanja,
+          _uangKembali);
 
-    if (success) {
       _namaPembeliController.clear();
       _qtyController.clear();
       _uangBayarController.clear();
@@ -58,7 +62,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
       Get.back();
       Get.snackbar('Success', 'Transaction updated successfully!');
     } else {
-      print('Gagal memperbarui transaksi');
+      Get.snackbar('Failed', 'Failed to update transaction');
     }
   }
 
@@ -294,7 +298,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
                         Get.snackbar(
                             'Success', 'Transaction deleted successfully!');
                       } else {
-                        print('Failed to add book, staying on /produkcreate');
+                        Get.snackbar('Failed', 'Failed to delete transaction');
                       }
                     },
                     child: Text(

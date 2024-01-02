@@ -1,6 +1,5 @@
 import 'package:bacabox/pages/transaksi_create.dart';
 import 'package:bacabox/pages/transaksi_detail.dart';
-// import 'package:bacabox/pages/transaksi_detail.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,15 +43,16 @@ class _TransaksiPageState extends State<TransaksiPage> {
     });
   }
 
-  DateTime selectedDate = DateTime.now(); // Tanggal yang dipilih
+  DateTime? selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
+
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
@@ -88,11 +88,13 @@ class _TransaksiPageState extends State<TransaksiPage> {
       final tanggalTransaksiString = transaksi['tanggaltransaksi'] as String;
       final tanggalTransaksi = DateTime.parse(tanggalTransaksiString);
 
-      return namaProduk.contains(searchQuery) &&
-          (selectedDate == null ||
-              (tanggalTransaksi.day == selectedDate.day &&
-                  tanggalTransaksi.month == selectedDate.month &&
-                  tanggalTransaksi.year == selectedDate.year));
+      final isTanggalSelected = selectedDate != null
+          ? (tanggalTransaksi.day == selectedDate!.day &&
+              tanggalTransaksi.month == selectedDate!.month &&
+              tanggalTransaksi.year == selectedDate!.year)
+          : true;
+
+      return namaProduk.contains(searchQuery) && isTanggalSelected;
     }).toList();
   }
 

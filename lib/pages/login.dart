@@ -10,9 +10,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final AuthController _authController = Get.find<AuthController>();
-
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
   bool _isObscure = true;
@@ -114,16 +112,10 @@ class _LoginPageState extends State<LoginPage> {
                 String email = emailController.text.trim();
                 String password = passwordController.text.trim();
 
-                // Memastikan email dan password tidak kosong sebelum melakukan login
                 if (email.isNotEmpty && password.isNotEmpty) {
                   _authController.login(email, password);
                 } else {
-                  // Menampilkan pesan kesalahan jika email atau password kosong
-                  Get.snackbar(
-                    'Error',
-                    'Please fill in all fields.',
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
+                  Get.snackbar('Error', 'Silakan lengkapi form.');
                 }
               },
               child: Text(

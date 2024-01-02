@@ -80,21 +80,27 @@ class ProdukDetail extends StatelessWidget {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          bool success = await _bookController.updateBook(
-                            id,
-                            titleController.text,
-                            double.parse(priceController.text),
-                          );
+                          String title = titleController.text.trim();
+                          double price =
+                              double.tryParse(priceController.text.trim()) ??
+                                  0.0;
 
-                          if (success) {
+                          if (title.isNotEmpty && price > 0) {
+                            await _bookController.updateBook(
+                              id,
+                              titleController.text,
+                              double.parse(priceController.text),
+                            );
+
                             _bookController.shouldUpdate.value = true;
-                            _addLog("Updated book with title: $title");
                             Get.back();
+                            _addLog("Updated book with title: $title");
+                            Get.snackbar(
+                                'Success', 'Book updated successfully!');
                           } else {
-                            print(
-                                'Failed to add book, staying on /produkcreate');
+                            Get.snackbar('Failed',
+                                'Gagal memperbarui buku, silakan periksa kembali form.');
                           }
-                          Get.snackbar('Success', 'Book updated successfully!');
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colour.primary),
@@ -106,13 +112,12 @@ class ProdukDetail extends StatelessWidget {
                         onPressed: () async {
                           bool success = await _bookController.deleteBook(id);
                           if (success) {
-                            _addLog("Deleted book with title: $title");
                             Get.back();
                             Get.snackbar(
                                 'Success', 'Book deleted successfully!');
+                            _addLog("Deleted book with title: $title");
                           } else {
-                            print(
-                                'Failed to add book, staying on /produkcreate');
+                            Get.snackbar('Failed', 'Failed to delete book');
                           }
                         },
                         style: ElevatedButton.styleFrom(

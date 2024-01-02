@@ -1,4 +1,5 @@
 import 'package:bacabox/controller/authController.dart';
+import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class _UserCreateState extends State<UserCreate> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final LogController logController = LogController();
 
   String? _selectedRole;
 
@@ -161,10 +163,11 @@ class _UserCreateState extends State<UserCreate> {
                         _authController.register(
                             email, password, _selectedRole!, name);
                         Get.back();
+                        Get.snackbar('Success', 'User created successfully!');
+                        _addLog('Created new user');
                       } else {
-                        print('Please fill in all fields correctly');
+                        Get.snackbar('Error', 'Please fill in all fields');
                       }
-                      Get.snackbar('Success', 'User created successfully!');
                     },
                     child: Text(
                       "Submit",
@@ -177,5 +180,13 @@ class _UserCreateState extends State<UserCreate> {
             ],
           ),
         ));
+  }
+  Future<void> _addLog(String message) async {
+    try {
+      await logController.addLog(message);
+      print('Log added successfully!');
+    } catch (e) {
+      print('Failed to add log: $e');
+    }
   }
 }

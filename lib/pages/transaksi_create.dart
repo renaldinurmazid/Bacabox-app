@@ -252,7 +252,11 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                             .replaceAll(RegExp('[^0-9]'), '')) ??
                         0;
 
-                    if (_selectedProduct != null && qty > 0 && uangBayar > 0) {
+                    if (_selectedProduct != null &&
+                        qty > 0 &&
+                        uangBayar > 0 &&
+                        namaPembeli.isNotEmpty &&
+                        uangBayar >= _totalBelanja) {
                       double totalBelanja = _hargaProduk * qty;
                       double uangKembali = uangBayar - totalBelanja;
 
@@ -294,7 +298,8 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                         print('Failed to add transaction to the database');
                       }
                     } else {
-                      print('Please fill in all fields correctly');
+                      Get.snackbar(
+                          'Failed', 'Silakan periksa kembali transaksi.');
                     }
                   },
                   child: Text('Submit',

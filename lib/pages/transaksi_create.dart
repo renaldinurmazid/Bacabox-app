@@ -131,7 +131,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                     setState(() {
                       _selectedProduct = newValue;
                       fetchBookPrice(
-                          newValue); // Panggil fungsi untuk menampilkan harga buku
+                          newValue);
                     });
                   },
                   items:

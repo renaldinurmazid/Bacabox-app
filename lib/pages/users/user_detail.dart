@@ -14,7 +14,7 @@ class UserDetail extends StatefulWidget {
 class _UserDetailState extends State<UserDetail> {
   final AuthController _AuthController = Get.put(AuthController());
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final LogController logController = LogController();
 
@@ -45,11 +45,11 @@ class _UserDetailState extends State<UserDetail> {
     final Map<String, dynamic>? args = Get.arguments;
     final String id = args?['id'] ?? '';
     final String name = args?['name'] ?? '';
-    final String email = args?['email'] ?? '';
+    final String username = args?['username'] ?? '';
     final String password = args?['password'] ?? '';
 
     nameController.text = name;
-    emailController.text = email;
+    usernameController.text = username;
     passwordController.text = password;
 
     return Scaffold(
@@ -92,11 +92,11 @@ class _UserDetailState extends State<UserDetail> {
               ),
               SizedBox(height: 20),
               TextField(
-                controller: emailController,
+                controller: usernameController,
                 decoration: InputDecoration(
-                  hintText: 'Exm. renaldinurmazid@gmail.com',
+                  hintText: 'Exm. Renaldi Nurmazid',
                   label: Text(
-                    'Email',
+                    'Username',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -175,16 +175,17 @@ class _UserDetailState extends State<UserDetail> {
                           backgroundColor: Colour.primary,
                         ),
                         onPressed: () {
-                          String email = emailController.text.trim();
                           String password = passwordController.text.trim();
                           String name = nameController.text.trim();
+                          String username = usernameController.text.trim();
+                          String updated_at = DateTime.now().toString();
 
-                          if (email.isNotEmpty &&
+                          if (username.isNotEmpty &&
                               name.isNotEmpty &&
                               _selectedRole != null) {
                             String userId = id;
-                            _AuthController.updateUser(
-                                userId, email, _selectedRole!, name, password);
+                            _AuthController.updateUser(userId,
+                                _selectedRole!, name, password, username, updated_at);
                             Get.back();
                             _addLog('Updated user');
                           } else {
@@ -228,9 +229,9 @@ class _UserDetailState extends State<UserDetail> {
         ));
   }
 
-  Future<void> _addLog(String message) async {
+  Future<void> _addLog(String activity) async {
     try {
-      await logController.addLog(message);
+      await logController.addLog(activity);
       print('Log added successfully!');
     } catch (e) {
       print('Failed to add log: $e');

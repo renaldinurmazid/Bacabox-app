@@ -31,7 +31,7 @@ class TransaksiController extends GetxController {
 
   Future<bool> updateTransaksi(
       String id,
-      String namaPembeli,
+      String namaPelanggan,
       String namaProduk,
       double hargaProduk,
       int qty,
@@ -41,7 +41,7 @@ class TransaksiController extends GetxController {
       String updated_at) async {
     try {
       await _firestore.collection('transaksi').doc(id).update({
-        'namaPembeli': namaPembeli,
+        'namaPelanggan': namaPelanggan,
         'namaProduk': namaProduk,
         'hargaProduk': hargaProduk,
         'qty': qty,

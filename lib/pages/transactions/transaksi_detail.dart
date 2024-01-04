@@ -322,10 +322,10 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
     );
   }
 
-  Future<void> _addLog(String message) async {
+  Future<void> _addLog(String activity) async {
     try {
       await _logController
-          .addLog(message); // Menambahkan log saat tombol ditekan
+          .addLog(activity); // Menambahkan log saat tombol ditekan
       print('Log added successfully!');
     } catch (e) {
       print('Failed to add log: $e');

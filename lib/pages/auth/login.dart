@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final AuthController _authController = Get.find<AuthController>();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   bool _isObscure = true;
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 20),
             Text(
-              "Email",
+              "Username",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -57,14 +57,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             TextFormField(
-              controller: emailController,
+              controller: usernameController,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                     onPressed: () {
-                      emailController.clear();
+                      usernameController.clear();
                     },
                     icon: Icon(Icons.clear)),
-                hintText: 'Your email',
+                hintText: 'Your Username',
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -87,12 +87,10 @@ class _LoginPageState extends State<LoginPage> {
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   onPressed: () {
-                    togglePasswordVisibility(); // Panggil fungsi untuk mengubah status obscure password
+                    togglePasswordVisibility();
                   },
-                  icon: Icon(_isObscure
-                      ? Icons.visibility
-                      : Icons
-                          .visibility_off), // Ganti ikon berdasarkan status obscure
+                  icon: Icon(
+                      _isObscure ? Icons.visibility : Icons.visibility_off),
                 ),
                 hintText: 'Your password',
                 filled: true,
@@ -109,11 +107,11 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.all(20),
               ),
               onPressed: () {
-                String email = emailController.text.trim();
+                String username = usernameController.text.trim();
                 String password = passwordController.text.trim();
 
-                if (email.isNotEmpty && password.isNotEmpty) {
-                  _authController.login(email, password);
+                if (username.isNotEmpty && password.isNotEmpty) {
+                  _authController.login(username, password);
                 } else {
                   Get.snackbar('Error', 'Silakan lengkapi form.');
                 }

@@ -116,9 +116,9 @@ class _ProdukCreateState extends State<ProdukCreate> {
     );
   }
 
-  Future<void> _addLog(String message) async {
+  Future<void> _addLog(String activity) async {
     try {
-      await logController.addLog(message);
+      await logController.addLog(activity);
       print('Log added successfully!');
     } catch (e) {
       print('Failed to add log: $e');

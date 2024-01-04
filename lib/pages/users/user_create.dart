@@ -14,7 +14,7 @@ class UserCreate extends StatefulWidget {
 class _UserCreateState extends State<UserCreate> {
   final AuthController _authController = Get.put(AuthController());
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final LogController logController = LogController();
 
@@ -32,6 +32,11 @@ class _UserCreateState extends State<UserCreate> {
 
   @override
   Widget build(BuildContext context) {
+    void _createUsername(String value) {
+      String username = value.toLowerCase().replaceAll(' ', '');
+      usernameController.text = username;
+    }
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colour.secondary,
@@ -51,6 +56,9 @@ class _UserCreateState extends State<UserCreate> {
             children: [
               TextField(
                 controller: nameController,
+                onChanged: (value) {
+                  _createUsername(value);
+                },
                 decoration: InputDecoration(
                   hintText: 'Exm. Renaldi Nurmazid',
                   label: Text(
@@ -72,11 +80,12 @@ class _UserCreateState extends State<UserCreate> {
               ),
               SizedBox(height: 20),
               TextField(
-                controller: emailController,
+                controller: usernameController,
+                enabled: false,
                 decoration: InputDecoration(
-                  hintText: 'Exm. renaldinurmazid@gmail.com',
+                  hintText: 'Exm. Renaldi Nurmazid',
                   label: Text(
-                    'Email',
+                    'Username',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -152,16 +161,18 @@ class _UserCreateState extends State<UserCreate> {
                       backgroundColor: Colour.primary,
                     ),
                     onPressed: () {
-                      String email = emailController.text.trim();
                       String password = passwordController.text.trim();
                       String name = nameController.text.trim();
+                      String username = usernameController.text.trim();
+                      String created_at = DateTime.now().toString();
+                      String updated_at = DateTime.now().toString();
 
-                      if (email.isNotEmpty &&
+                      if (username.isNotEmpty &&
                           password.isNotEmpty &&
                           name.isNotEmpty &&
                           _selectedRole != null) {
                         _authController.register(
-                            email, password, _selectedRole!, name);
+                            password, _selectedRole!, name, username,created_at,updated_at);
                         Get.back();
                         Get.snackbar('Success', 'User created successfully!');
                         _addLog('Created new user');
@@ -181,9 +192,10 @@ class _UserCreateState extends State<UserCreate> {
           ),
         ));
   }
-  Future<void> _addLog(String message) async {
+
+  Future<void> _addLog(String activity) async {
     try {
-      await logController.addLog(message);
+      await logController.addLog(activity);
       print('Log added successfully!');
     } catch (e) {
       print('Failed to add log: $e');

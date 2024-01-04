@@ -1,6 +1,6 @@
 class Transaksi {
   final int nomor_unik;
-  final String namaPembeli;
+  final String namaPelanggan;
   final String namaProduk;
   final double hargaProduk;
   final int qty;
@@ -12,7 +12,7 @@ class Transaksi {
 
   Transaksi({
     required this.nomor_unik,
-    required this.namaPembeli,
+    required this.namaPelanggan,
     required this.namaProduk,
     required this.hargaProduk,
     required this.qty,
@@ -26,7 +26,7 @@ class Transaksi {
   Map<String, dynamic> toMap() {
     return {
       'nomor_unik': nomor_unik,
-      'namaPembeli': namaPembeli,
+      'namaPelanggan': namaPelanggan,
       'namaProduk': namaProduk,
       'hargaProduk': hargaProduk,
       'qty': qty,

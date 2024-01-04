@@ -11,7 +11,7 @@ import 'package:image/image.dart' as img;
 
 class TransaksiS extends StatefulWidget {
   final int nomor_unik;
-  final String namaPembeli;
+  final String namaPelanggan;
   final String namaBarang;
   final double hargaSatuan;
   final int qty;
@@ -22,7 +22,7 @@ class TransaksiS extends StatefulWidget {
 
   const TransaksiS(
       {required this.nomor_unik,
-      required this.namaPembeli,
+      required this.namaPelanggan,
       required this.namaBarang,
       required this.hargaSatuan,
       required this.qty,
@@ -192,6 +192,26 @@ class _TransaksiSState extends State<TransaksiS> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
+                        "No. Struk",
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey),
+                      ),
+                      Text(
+                        "${widget.nomor_unik}",
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey),
+                      ),
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
                         "Nama Pembeli",
                         style: TextStyle(
                             fontFamily: 'Poppins',
@@ -200,7 +220,7 @@ class _TransaksiSState extends State<TransaksiS> {
                             color: Colors.grey),
                       ),
                       Text(
-                        "${widget.namaPembeli}",
+                        "${widget.namaPelanggan}",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 13,

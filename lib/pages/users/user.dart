@@ -118,7 +118,8 @@ class _UserPageState extends State<UserPage> {
                       var usersData =
                           filteredusers[index].data() as Map<String, dynamic>;
                       String name = usersData['name'];
-                      String email = usersData['email'];
+                      String username = usersData['username'];
+                      String role = usersData['role'];
 
                       return GestureDetector(
                           child: Container(
@@ -151,14 +152,29 @@ class _UserPageState extends State<UserPage> {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  Text(
-                                    email,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                      fontFamily: "Poppins",
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        username,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        role,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -169,9 +185,9 @@ class _UserPageState extends State<UserPage> {
                                 Get.to(() => UserDetail(), arguments: {
                                   'id': filteredusers[index].id,
                                   'name': name,
-                                  'email': email,
                                   'role': usersData['role'],
                                   'password': usersData['password'],
+                                  'username': usersData['username'],
                                 });
                               },
                               icon: Icon(Icons.more_vert),

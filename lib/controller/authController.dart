@@ -14,15 +14,15 @@ class AuthController extends GetxController {
 
   Rx<UserRole> userRole = UserRole.Admin.obs;
 
-   UserRole getCurrentUserRole() {
+  UserRole getCurrentUserRole() {
     return userRole.value;
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String username, String password) async {
     try {
       QuerySnapshot querySnapshot = await _firestore
           .collection('users')
-          .where('email', isEqualTo: email)
+          .where('username', isEqualTo: username)
           .where('password', isEqualTo: password)
           .limit(1)
           .get();
@@ -32,7 +32,8 @@ class AuthController extends GetxController {
             querySnapshot.docs.first.data() as Map<String, dynamic>;
         String role = userData['role'];
 
-        UserModel user = UserModel.fromJson(querySnapshot.docs.first.data() as Map<String, dynamic>);
+        UserModel user = UserModel.fromJson(
+            querySnapshot.docs.first.data() as Map<String, dynamic>);
         userName.value = user.name;
 
         switch (role.toLowerCase()) {
@@ -46,7 +47,7 @@ class AuthController extends GetxController {
             userRole.value = UserRole.Owner;
             break;
           default:
-            userRole.value = UserRole.Admin; 
+            userRole.value = UserRole.Admin;
             break;
         }
         Get.offNamed('/home');
@@ -74,14 +75,16 @@ class AuthController extends GetxController {
     Get.snackbar('Sign Out', 'You have been signed out');
   }
 
-  Future<void> register(
-      String email, String password, String role, String name) async {
+  Future<void> register(String password, String role, String name,
+      String username, String created_at, String updated_at) async {
     try {
       UserModel newUser = UserModel(
-        email: email,
         password: password,
         role: role,
         name: name,
+        username: username,
+        created_at: created_at,
+        updated_at: updated_at,
       );
 
       await _firestore.collection('users').add(newUser.toJson());
@@ -91,14 +94,15 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> updateUser(String userId, String email, String role, String name,
-      String password) async {
+  Future<void> updateUser(String userId, String role, String name,
+      String password, String username, String updated_at) async {
     try {
       await _firestore.collection('users').doc(userId).update({
-        'email': email,
         'role': role,
         'name': name,
         'password': password,
+        'username': username,
+        'updated_at': updated_at,
       });
       Get.snackbar('Success', 'User data updated successfully');
     } catch (e) {

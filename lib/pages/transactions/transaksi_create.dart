@@ -104,7 +104,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                   decoration: InputDecoration(
                     hintText: 'Exm. Renaldi Nurmazid',
                     label: Text(
-                      'Nama Pembeli',
+                      'Nama Pelanggan',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -269,7 +269,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
 
                       Transaksi newTransaksi = Transaksi(
                         nomor_unik: _nomor_unik,
-                        namaPembeli: namaPembeli,
+                        namaPelanggan: namaPembeli,
                         namaProduk: _selectedProduct!,
                         hargaProduk: _hargaProduk,
                         qty: qty,
@@ -282,7 +282,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                       _addLog("Add Transaksi");
                       Get.to(() => TransaksiS(
                             nomor_unik: _nomor_unik,
-                            namaPembeli: namaPembeli,
+                            namaPelanggan: namaPembeli,
                             namaBarang: _selectedProduct!,
                             hargaSatuan: _hargaProduk,
                             qty: qty,
@@ -331,10 +331,10 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
     });
   }
 
-  Future<void> _addLog(String message) async {
+  Future<void> _addLog(String activity) async {
     try {
       await logController
-          .addLog(message); // Menambahkan log saat tombol ditekan
+          .addLog(activity);
       print('Log added successfully!');
     } catch (e) {
       print('Failed to add log: $e');

@@ -8,13 +8,13 @@ class LogController {
       FirebaseFirestore.instance.collection('logs');
   final AuthController _authController = Get.find<AuthController>();
 
-  Future<void> addLog(String message) async {
+  Future<void> addLog(String activity) async {
     try {
       String userName = _authController.userName.value;
 
       await logsCollection.add({
-        'message': message,
-        'timestamp': DateTime.now().toIso8601String(),
+        'activity': activity,
+        'created_at': DateTime.now().toString(),
         'userName': userName,
       });
     } catch (e) {

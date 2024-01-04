@@ -105,7 +105,7 @@ class _LogState extends State<Log> {
                       var logsData =
                           filteredlogs[index].data() as Map<String, dynamic>;
                       String name = logsData['userName'];
-                      String message = logsData['message'];
+                      String activity = logsData['activity'];
 
                       return GestureDetector(
                         child: Container(
@@ -139,7 +139,7 @@ class _LogState extends State<Log> {
                                       ),
                                     ),
                                     Text(
-                                      message,
+                                      activity,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,

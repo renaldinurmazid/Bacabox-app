@@ -302,7 +302,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                     itemBuilder: (context, index) {
                       var transaksiData = filteredTransaksi[index].data()
                           as Map<String, dynamic>;
-                      String namaPembeli = transaksiData['namaPembeli'];
+                      String namaPembeli = transaksiData['namaPelanggan'];
                       String namaProduk = transaksiData['namaProduk'];
                       double hargaProduk =
                           transaksiData['hargaProduk']?.toDouble() ?? 0.0;

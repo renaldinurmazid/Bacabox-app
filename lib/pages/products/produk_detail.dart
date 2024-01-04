@@ -14,11 +14,11 @@ class ProdukDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<String, dynamic>? args = Get.arguments;
     final String id = args?['id'] ?? '';
-    final String title = args?['title'] ?? '';
-    final double price = args?['price'] ?? 0.0;
+    final String nama_produk = args?['nama_produk'] ?? '';
+    final double harga_produk = args?['harga_produk'] ?? 0.0;
 
-    titleController.text = title;
-    priceController.text = price.toStringAsFixed(0);
+    titleController.text = nama_produk;
+    priceController.text = harga_produk.toStringAsFixed(0);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -80,21 +80,22 @@ class ProdukDetail extends StatelessWidget {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          String title = titleController.text.trim();
-                          double price =
+                          String nama_produk = titleController.text.trim();
+                          double harga_produk =
                               double.tryParse(priceController.text.trim()) ??
                                   0.0;
-
-                          if (title.isNotEmpty && price > 0) {
+                          String updated_at = DateTime.now().toString();
+                          if (nama_produk.isNotEmpty && harga_produk > 0) {
                             await _bookController.updateBook(
                               id,
                               titleController.text,
                               double.parse(priceController.text),
+                              updated_at,
                             );
 
                             _bookController.shouldUpdate.value = true;
                             Get.back();
-                            _addLog("Updated book with title: $title");
+                            _addLog("Updated book with title: $nama_produk");
                             Get.snackbar(
                                 'Success', 'Book updated successfully!');
                           } else {
@@ -115,7 +116,7 @@ class ProdukDetail extends StatelessWidget {
                             Get.back();
                             Get.snackbar(
                                 'Success', 'Book deleted successfully!');
-                            _addLog("Deleted book with title: $title");
+                            _addLog("Deleted book with title: $nama_produk");
                           } else {
                             Get.snackbar('Failed', 'Failed to delete book');
                           }

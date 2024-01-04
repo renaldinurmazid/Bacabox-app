@@ -1,10 +1,14 @@
-class Book {
-  late String title;
-  late double price;
+class Products {
+  final String nama_produk;
+  final double harga_produk;
+  final String created_at;
+  final String updated_at;
 
-  Book({
-    required this.title,
-    required this.price,
+  Products({
+    required this.nama_produk,
+    required this.harga_produk,
+    required this.created_at,
+    required this.updated_at,
     String? id,
   });
 
@@ -12,8 +16,10 @@ class Book {
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
-      'price': price,
+      'nama_produk': nama_produk,
+      'harga_produk': harga_produk,
+      'created_at': created_at,
+      'updated_at': updated_at,
     };
   }
 }

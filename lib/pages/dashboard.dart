@@ -68,7 +68,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             SizedBox(height: 20),
             FutureBuilder<int>(
-              future: _bookController.countBooks(),
+              future: _bookController.countProducts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();

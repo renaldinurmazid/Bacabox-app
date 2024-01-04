@@ -57,7 +57,7 @@ class _ProdukCreateState extends State<ProdukCreate> {
               controller: priceController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: 'Exm. Rp. 100.000',
+                hintText: 'Exm. 100000',
                 labelText: 'Harga Buku',
                 labelStyle: TextStyle(
                   color: Colors.black,
@@ -82,17 +82,20 @@ class _ProdukCreateState extends State<ProdukCreate> {
                   backgroundColor: Colour.primary,
                 ),
                 onPressed: () async {
-                  String title = titleController.text.trim();
-                  double price =
+                  String nama_produk = titleController.text.trim();
+                  double harga_produk =
                       double.tryParse(priceController.text.trim()) ?? 0.0;
-
-                  if (title.isNotEmpty && price > 0) {
-                    Book newBook = Book(title: title, price: price);
-                    bool success = await _bookController.addBook(newBook);
+                  if (nama_produk.isNotEmpty && harga_produk > 0) {
+                    Products newProducts = Products(
+                        nama_produk: nama_produk,
+                        harga_produk: harga_produk,
+                        created_at: DateTime.now().toString(),
+                        updated_at: DateTime.now().toString());
+                    bool success = await _bookController.addBook(newProducts);
 
                     if (success) {
                       _bookController.shouldUpdate.value = true;
-                      _addLog('Created new book: $title');
+                      _addLog('Created new book: $nama_produk');
                       Get.back();
                       Get.snackbar('Success', 'Book added successfully!');
                     } else {

@@ -15,7 +15,7 @@ class _ProdukPageState extends State<ProdukPage> {
   final currencyFormatter =
       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ');
   final CollectionReference booksCollection =
-      FirebaseFirestore.instance.collection('books');
+      FirebaseFirestore.instance.collection('products');
   var refreshFlag = false;
   var searchQuery = '';
 
@@ -99,15 +99,16 @@ class _ProdukPageState extends State<ProdukPage> {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                final List<DocumentSnapshot> books = snapshot.data!.docs;
+                final List<DocumentSnapshot> products = snapshot.data!.docs;
 
-                final filteredBooks = searchQuery.isEmpty
-                    ? books
-                    : books.where((book) {
-                        final title = book['title'].toString().toLowerCase();
-                        return title.contains(searchQuery);
+                final filteredProducts = searchQuery.isEmpty
+                    ? products
+                    : products.where((products) {
+                        final nama_produk =
+                            products['nama_produk'].toString().toLowerCase();
+                        return nama_produk.contains(searchQuery);
                       }).toList();
-                if (filteredBooks.isEmpty) {
+                if (filteredProducts.isEmpty) {
                   return Center(
                     child: Text(
                       'Produk tidak ditemukan',
@@ -121,20 +122,22 @@ class _ProdukPageState extends State<ProdukPage> {
                 }
 
                 return ListView.builder(
-                  itemCount: filteredBooks.length,
+                  itemCount: filteredProducts.length,
                   itemBuilder: (context, index) {
-                    var bookData =
-                        filteredBooks[index].data() as Map<String, dynamic>;
-                    String title = bookData['title'];
-                    double price = bookData['price']?.toDouble() ?? 0.0;
-                    String formattedPrice = currencyFormatter.format(price);
+                    var productsData =
+                        filteredProducts[index].data() as Map<String, dynamic>;
+                    String nama_produk = productsData['nama_produk'];
+                    double harga_produk =
+                        productsData['harga_produk']?.toDouble() ?? 0.0;
+                    String formattedPrice =
+                        currencyFormatter.format(harga_produk);
 
                     return GestureDetector(
                       onTap: () {
                         Get.to(() => ProdukDetail(), arguments: {
-                          'id': filteredBooks[index].id,
-                          'title': title,
-                          'price': price,
+                          'id': filteredProducts[index].id,
+                          'nama_produk': nama_produk,
+                          'harga_produk': harga_produk,
                         });
                       },
                       child: Container(
@@ -161,7 +164,7 @@ class _ProdukPageState extends State<ProdukPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    title,
+                                    nama_produk,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: "Poppins",
@@ -184,9 +187,9 @@ class _ProdukPageState extends State<ProdukPage> {
                             IconButton(
                               onPressed: () {
                                 Get.to(() => ProdukDetail(), arguments: {
-                                  'id': filteredBooks[index].id,
-                                  'title': title,
-                                  'price': price,
+                                  'id': filteredProducts[index].id,
+                                  'nama_produk': nama_produk,
+                                  'harga_produk': harga_produk,
                                 });
                               },
                               icon: Icon(Icons.more_vert),

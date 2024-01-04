@@ -8,9 +8,9 @@ class BookController extends GetxController {
 
   get book => null;
 
-  Future<bool> addBook(Book book) async {
+  Future<bool> addBook(Products products) async {
     try {
-      await _firestore.collection('books').add(book.toMap());
+      await _firestore.collection('products').add(products.toMap());
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -21,7 +21,7 @@ class BookController extends GetxController {
 
   Future<bool> deleteBook(String id) async {
     try {
-      await _firestore.collection('books').doc(id).delete();
+      await _firestore.collection('products').doc(id).delete();
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -30,11 +30,13 @@ class BookController extends GetxController {
     }
   }
 
-  Future<bool> updateBook(String id, String newTitle, double newPrice) async {
+  Future<bool> updateBook(String id, String namaProduk, double hargaProduk,
+      String updated_at) async {
     try {
-      await _firestore.collection('books').doc(id).update({
-        'title': newTitle,
-        'price': newPrice,
+      await _firestore.collection('products').doc(id).update({
+        'nama_produk': namaProduk,
+        'harga_produk': hargaProduk,
+        'updated_at': updated_at,
       });
       return true;
     } catch (e) {
@@ -43,9 +45,10 @@ class BookController extends GetxController {
     }
   }
 
-  Future<int> countBooks() async {
+  Future<int> countProducts() async {
     try {
-      QuerySnapshot querySnapshot = await _firestore.collection('books').get();
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('products').get();
       return querySnapshot.size;
     } catch (e) {
       print('Error counting books: $e');

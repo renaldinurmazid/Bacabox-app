@@ -41,12 +41,12 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
   void fetchBookPrice(String? selectedBook) async {
     if (selectedBook != null) {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('books')
-          .where('title', isEqualTo: selectedBook)
+          .collection('products')
+          .where('nama_produk', isEqualTo: selectedBook)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        double hargaProduk = querySnapshot.docs.first['price'];
+        double hargaProduk = querySnapshot.docs.first['harga_produk'];
 
         setState(() {
           _hargaProduk = hargaProduk;
@@ -70,11 +70,13 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
 
   Future<void> fetchProducts() async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('books').get();
+        await FirebaseFirestore.instance.collection('products').get();
 
     setState(() {
-      produkList =
-          querySnapshot.docs.map((doc) => doc['title']).toList().cast<String>();
+      produkList = querySnapshot.docs
+          .map((doc) => doc['nama_produk'])
+          .toList()
+          .cast<String>();
     });
   }
 
@@ -130,8 +132,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                   onChanged: (String? newValue) {
                     setState(() {
                       _selectedProduct = newValue;
-                      fetchBookPrice(
-                          newValue);
+                      fetchBookPrice(newValue);
                     });
                   },
                   items:

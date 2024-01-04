@@ -2,6 +2,7 @@ import 'package:bacabox/controller/authController.dart';
 import 'package:bacabox/controller/bookController.dart';
 import 'package:bacabox/controller/transaksiController.dart';
 import 'package:bacabox/theme/color.dart';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +17,21 @@ class _DashboardState extends State<Dashboard> {
   final AuthController _userController = Get.put(AuthController());
   final TransaksiController _transaksiController =
       Get.put(TransaksiController());
+
+  List<BluetoothDevice> devices = [];
+  BluetoothDevice? selectedDevice;
+  BlueThermalPrinter printer = BlueThermalPrinter.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    getDevices();
+  }
+
+  void getDevices() async {
+    devices = await printer.getBondedDevices();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
               IconButton(
                 onPressed: () {
                   _authController.signOut();
+                  printer.disconnect();
                 },
                 icon: Icon(Icons.logout),
               ),

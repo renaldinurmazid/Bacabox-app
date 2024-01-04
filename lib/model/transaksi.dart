@@ -1,4 +1,5 @@
 class Transaksi {
+  final int nomor_unik;
   final String namaPembeli;
   final String namaProduk;
   final double hargaProduk;
@@ -6,19 +7,23 @@ class Transaksi {
   final double uangBayar;
   final double totalBelanja;
   final double uangKembali;
+  final String created_at;
 
   Transaksi({
+    required this.nomor_unik,
     required this.namaPembeli,
     required this.namaProduk,
     required this.hargaProduk,
     required this.qty,
     required this.uangBayar,
     required this.totalBelanja,
-    required this.uangKembali, required String tanggaltransaksi,
+    required this.uangKembali, 
+    required this.created_at,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      'nomor_unik': nomor_unik,
       'namaPembeli': namaPembeli,
       'namaProduk': namaProduk,
       'hargaProduk': hargaProduk,
@@ -26,7 +31,7 @@ class Transaksi {
       'uangBayar': uangBayar,
       'totalBelanja': totalBelanja,
       'uangKembali': uangKembali,
-      'tanggaltransaksi': DateTime.now().toString(),
+      'created_at': created_at,
     };
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/controller/transaksiController.dart';
 import 'package:bacabox/model/transaksi.dart';
@@ -261,7 +263,11 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                       double totalBelanja = _hargaProduk * qty;
                       double uangKembali = uangBayar - totalBelanja;
 
+                      int _nomor_unik = Random().nextInt(1000000000);
+                      String _created_at = DateTime.now().toString();
+
                       Transaksi newTransaksi = Transaksi(
+                        nomor_unik: _nomor_unik,
                         namaPembeli: namaPembeli,
                         namaProduk: _selectedProduct!,
                         hargaProduk: _hargaProduk,
@@ -269,10 +275,11 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                         uangBayar: uangBayar,
                         totalBelanja: totalBelanja,
                         uangKembali: uangKembali,
-                        tanggaltransaksi: DateTime.now().toString(),
+                        created_at: _created_at,
                       );
                       _addLog("Add Transaksi");
                       Get.to(() => TransaksiS(
+                            nomor_unik: _nomor_unik,
                             namaPembeli: namaPembeli,
                             namaBarang: _selectedProduct!,
                             hargaSatuan: _hargaProduk,
@@ -280,6 +287,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                             totalBelanja: totalBelanja,
                             uangBayar: uangBayar,
                             uangKembali: uangKembali,
+                            created_at: _created_at,
                           ));
                       Get.snackbar('Success', 'Transaksi added successfully');
 

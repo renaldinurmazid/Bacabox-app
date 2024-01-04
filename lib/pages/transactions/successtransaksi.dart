@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'package:bacabox/controller/authController.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
 
 class TransaksiS extends StatefulWidget {
+  final int nomor_unik;
   final String namaPembeli;
   final String namaBarang;
   final double hargaSatuan;
@@ -18,15 +18,18 @@ class TransaksiS extends StatefulWidget {
   final double totalBelanja;
   final double uangBayar;
   final double uangKembali;
+  final String created_at;
 
   const TransaksiS(
-      {required this.namaPembeli,
+      {required this.nomor_unik,
+      required this.namaPembeli,
       required this.namaBarang,
       required this.hargaSatuan,
       required this.qty,
       required this.totalBelanja,
       required this.uangBayar,
-      required this.uangKembali});
+      required this.uangKembali,
+      required this.created_at});
 
   @override
   State<TransaksiS> createState() => _TransaksiSState();
@@ -91,12 +94,19 @@ class _TransaksiSState extends State<TransaksiS> {
       Uint8List? originalImageBytes = await imageFuture;
 
       Uint8List resizedImageBytes =
-          await resizeImage(originalImageBytes!, 100, 100);
+          await resizeImage(originalImageBytes, 100, 100);
 
       printer.printImageBytes(resizedImageBytes);
       printer.printCustom("Bacabox", 2, 1);
       printer.printNewLine();
+      printer.printLeftRight("No. Struk", "${widget.nomor_unik}", 1);
       printer.printLeftRight("Nama Kasir", "${_authController.userName}", 1);
+      printer.printLeftRight(
+        "Tanggal",
+        "${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(widget.created_at))}",
+        1,
+      );
+      printer.printNewLine();
       printer.printLeftRight("Barang", "${widget.namaBarang}", 1);
       printer.printLeftRight(
           "Harga Satuan", "${currencyFormatter.format(widget.hargaSatuan)}", 1);

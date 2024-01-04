@@ -85,7 +85,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
   void filterTransaksi() {
     filteredTransaksi = transaksiList.where((transaksi) {
       final namaProduk = transaksi['namaProduk'].toString().toLowerCase();
-      final tanggalTransaksiString = transaksi['tanggaltransaksi'] as String;
+      final tanggalTransaksiString = transaksi['created_at'] as String;
       final tanggalTransaksi = DateTime.parse(tanggalTransaksiString);
 
       final isTanggalSelected = selectedDate != null

@@ -1,5 +1,5 @@
-import 'package:bacabox/pages/transaksi_create.dart';
-import 'package:bacabox/pages/transaksi_detail.dart';
+import 'package:bacabox/pages/transactions/transaksi_create.dart';
+import 'package:bacabox/pages/transactions/transaksi_detail.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

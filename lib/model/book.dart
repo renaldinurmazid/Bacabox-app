@@ -4,7 +4,8 @@ class Book {
 
   Book({
     required this.title,
-    required this.price, String? id,
+    required this.price,
+    String? id,
   });
 
   String? get id => null;

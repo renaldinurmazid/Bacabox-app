@@ -1,7 +1,7 @@
 import 'package:bacabox/controller/logController.dart';
 import 'package:bacabox/controller/transaksiController.dart';
 import 'package:bacabox/model/transaksi.dart';
-import 'package:bacabox/pages/successtransaksi.dart';
+import 'package:bacabox/pages/transactions/successtransaksi.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

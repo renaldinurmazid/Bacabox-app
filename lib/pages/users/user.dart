@@ -1,5 +1,5 @@
-import 'package:bacabox/pages/user_create.dart';
-import 'package:bacabox/pages/user_detail.dart';
+import 'package:bacabox/pages/users/user_create.dart';
+import 'package:bacabox/pages/users/user_detail.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

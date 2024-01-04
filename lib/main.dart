@@ -1,17 +1,17 @@
 import 'package:bacabox/controller/authController.dart';
-import 'package:bacabox/pages/admin/dashboard.dart';
-import 'package:bacabox/pages/log.dart';
-import 'package:bacabox/pages/produk.dart';
-import 'package:bacabox/pages/produk_create.dart';
-import 'package:bacabox/pages/transaksi.dart';
-import 'package:bacabox/pages/user.dart';
+import 'package:bacabox/pages/dashboard.dart';
+import 'package:bacabox/pages/log/log.dart';
+import 'package:bacabox/pages/products/produk.dart';
+import 'package:bacabox/pages/products/produk_create.dart';
+import 'package:bacabox/pages/transactions/transaksi.dart';
+import 'package:bacabox/pages/users/user.dart';
 import 'package:bacabox/theme/color.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:get/get.dart';
-import 'pages/login.dart';
+import 'pages/auth/login.dart';
 import 'pages/screen.dart';
 
 void main() async {
@@ -53,8 +53,8 @@ class MyHomePage extends StatelessWidget {
 
   final List<List<IconData>> _roleIcons = [
     [Icons.dashboard, Icons.person, Icons.book],
-    [Icons.dashboard, Icons.swap_horizontal_circle, Icons.book],
-    [Icons.dashboard, Icons.history],
+    [Icons.dashboard, Icons.swap_horizontal_circle],
+    [Icons.dashboard, Icons.swap_horizontal_circle, Icons.history],
     [
       Icons.dashboard,
       Icons.swap_horizontal_circle,
@@ -73,11 +73,11 @@ class MyHomePage extends StatelessWidget {
   final List<Widget> _kasirOptions = <Widget>[
     Dashboard(),
     TransaksiPage(),
-    ProdukPage(),
   ];
 
   final List<Widget> _ownerOptions = <Widget>[
     Dashboard(),
+    TransaksiPage(),
     Log(),
   ];
 
@@ -117,8 +117,7 @@ class MyHomePage extends StatelessWidget {
         return CurvedNavigationBar(
           backgroundColor: Colour.secondary,
           items: List.generate(selectedOptions.length, (index) {
-            return Icon(selectedIcons[index],
-                size: 30); 
+            return Icon(selectedIcons[index], size: 30);
           }),
           onTap: _onItemTapped,
           index: _selectedIndex.value,

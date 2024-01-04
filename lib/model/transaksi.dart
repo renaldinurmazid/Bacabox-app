@@ -8,6 +8,7 @@ class Transaksi {
   final double totalBelanja;
   final double uangKembali;
   final String created_at;
+  final String updated_at;
 
   Transaksi({
     required this.nomor_unik,
@@ -19,6 +20,7 @@ class Transaksi {
     required this.totalBelanja,
     required this.uangKembali, 
     required this.created_at,
+    required this.updated_at,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class Transaksi {
       'totalBelanja': totalBelanja,
       'uangKembali': uangKembali,
       'created_at': created_at,
+      'updated_at': updated_at,
     };
   }
 }

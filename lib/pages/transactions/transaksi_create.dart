@@ -265,6 +265,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
 
                       int _nomor_unik = Random().nextInt(1000000000);
                       String _created_at = DateTime.now().toString();
+                      String _updated_at = DateTime.now().toString();
 
                       Transaksi newTransaksi = Transaksi(
                         nomor_unik: _nomor_unik,
@@ -276,6 +277,7 @@ class _TransaksiCreateState extends State<TransaksiCreate> {
                         totalBelanja: totalBelanja,
                         uangKembali: uangKembali,
                         created_at: _created_at,
+                        updated_at: _updated_at,
                       );
                       _addLog("Add Transaksi");
                       Get.to(() => TransaksiS(

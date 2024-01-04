@@ -35,6 +35,7 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
         0;
     double _totalBelanja = _hargaProduk * qty;
     double _uangKembali = uangBayar - _totalBelanja;
+    String _updated_at = DateTime.now().toString();
 
     if (_selectedProduct != null &&
         qty > 0 &&
@@ -49,7 +50,8 @@ class _TransaksiDetailState extends State<TransaksiDetail> {
           qty,
           uangBayar,
           _totalBelanja,
-          _uangKembali);
+          _uangKembali,
+          _updated_at);
 
       _namaPembeliController.clear();
       _qtyController.clear();

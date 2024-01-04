@@ -29,23 +29,27 @@ class TransaksiController extends GetxController {
     }
   }
 
-  Future<bool> updateTransaksi(String id, String namaPembeli, String namaProduk, double hargaProduk, int qty, double uangBayar, double totalBelanja, double uangKembali) async {
+  Future<bool> updateTransaksi(
+      String id,
+      String namaPembeli,
+      String namaProduk,
+      double hargaProduk,
+      int qty,
+      double uangBayar,
+      double totalBelanja,
+      double uangKembali,
+      String updated_at) async {
     try {
-      await _firestore
-          .collection('transaksi')
-          .doc(id)
-          .update(
-            {
-              'namaPembeli': namaPembeli,
-              'namaProduk': namaProduk,
-              'hargaProduk': hargaProduk,
-              'qty': qty,
-              'uangBayar': uangBayar,
-              'totalBelanja': totalBelanja,
-              'uangKembali': uangKembali,
-              'tanggaltransaksi': DateTime.now().toString(),
-            }
-          );
+      await _firestore.collection('transaksi').doc(id).update({
+        'namaPembeli': namaPembeli,
+        'namaProduk': namaProduk,
+        'hargaProduk': hargaProduk,
+        'qty': qty,
+        'uangBayar': uangBayar,
+        'totalBelanja': totalBelanja,
+        'uangKembali': uangKembali,
+        'updated_at': updated_at,
+      });
       shouldUpdate.toggle();
       return true;
     } catch (e) {
@@ -60,7 +64,8 @@ class TransaksiController extends GetxController {
 
   Future<int> countTransaksi() async {
     try {
-      QuerySnapshot querySnapshot = await _firestore.collection('transaksi').get();
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('transaksi').get();
       return querySnapshot.size;
     } catch (e) {
       print('Error counting books: $e');

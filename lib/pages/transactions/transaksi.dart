@@ -1,3 +1,4 @@
+import 'package:bacabox/controller/authController.dart';
 import 'package:bacabox/pages/transactions/transaksi_create.dart';
 import 'package:bacabox/pages/transactions/transaksi_detail.dart';
 import 'package:bacabox/theme/color.dart';
@@ -15,6 +16,7 @@ class TransaksiPage extends StatefulWidget {
 }
 
 class _TransaksiPageState extends State<TransaksiPage> {
+  final AuthController _authController = Get.find<AuthController>();
   List<BluetoothDevice> devices = [];
   BluetoothDevice? selectedDevice;
   BlueThermalPrinter printer = BlueThermalPrinter.instance;
@@ -100,6 +102,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserRole currentUserRole = _authController.getCurrentUserRole();
     return Scaffold(
       backgroundColor: Colour.secondary,
       appBar: AppBar(
@@ -381,7 +384,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
                                   ],
                                 ),
                               ),
-                              SizedBox(width: 10),
+                              // SizedBox(width: 10),
                               IconButton(
                                 onPressed: () {
                                   Get.to(() => TransaksiDetail(), arguments: {
@@ -408,14 +411,16 @@ class _TransaksiPageState extends State<TransaksiPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colour.primary,
-        onPressed: () async {
-          await Get.to(() => TransaksiCreate());
-          setState(() {});
-        },
-        child: Icon(Icons.add, color: Colors.white),
-      ),
+      floatingActionButton: currentUserRole == UserRole.Kasir
+          ? FloatingActionButton(
+              backgroundColor: Colour.primary,
+              onPressed: () async {
+                await Get.to(() => TransaksiCreate());
+                setState(() {});
+              },
+              child: Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 }

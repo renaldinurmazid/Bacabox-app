@@ -7,6 +7,7 @@ class LogController {
   final CollectionReference logsCollection =
       FirebaseFirestore.instance.collection('logs');
   final AuthController _authController = Get.find<AuthController>();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addLog(String activity) async {
     try {
@@ -28,5 +29,15 @@ class LogController {
           .map((doc) => Log.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     });
+  }
+
+  Future<int> countLog() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('logs').get();
+      return querySnapshot.size;
+    } catch (e) {
+      print('Error counting books: $e');
+      return 0;
+    }
   }
 }
